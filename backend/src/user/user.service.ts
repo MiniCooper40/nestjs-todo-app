@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, SaveOptions } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -20,10 +20,10 @@ export class UserService {
     return this.userRepository.find();
   }
 
-  findById(id: number) {
+  findById(userId: number) {
     return this.userRepository.findOne({
       where: {
-        id,
+        userId,
       },
     });
   }
@@ -36,11 +36,30 @@ export class UserService {
     });
   }
 
+  async findTodosByUserId(userId: number) {
+    const user = await this.userRepository.findOne({
+      where: {
+        userId,
+      },
+      relations: {
+        todos: true,
+      },
+    });
+
+    if (!user) return null;
+
+    return user.todos;
+  }
+
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }
 
   remove(id: number) {
     return `This action removes a #${id} user`;
+  }
+
+  save(user: User, options?: SaveOptions) {
+    return this.userRepository.save(user, options);
   }
 }
