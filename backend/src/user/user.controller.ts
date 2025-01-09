@@ -6,9 +6,12 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from 'src/auth/auth.gaurd';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './user.decorator';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -39,5 +42,12 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get(':id/todo')
+  async findUsersTodos(@User('sub') userId: number, @Param('id') id: string) {
+    if (userId !== +id) return null;
+    return this.userService.findTodosByUserId(userId);
   }
 }
