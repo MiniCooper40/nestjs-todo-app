@@ -51,6 +51,22 @@ export class UserService {
     return user.todos;
   }
 
+  async findTodosByUsername(username: string) {
+    const user = await this.userRepository.findOne({
+      where: {
+        username,
+      },
+      relations: {
+        todos: true,
+      },
+    });
+
+    if (!user) return null;
+
+    return user.todos;
+  }
+
+
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }

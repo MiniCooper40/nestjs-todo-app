@@ -46,8 +46,11 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Get(':id/todo')
-  async findUsersTodos(@User('sub') userId: number, @Param('id') id: string) {
-    if (userId !== +id) return null;
-    return this.userService.findTodosByUserId(userId);
+  async findUsersTodos(
+    @User('username') username: string,
+    @Param('id') id: string,
+  ) {
+    if (username !== id) return null;
+    return this.userService.findTodosByUsername(username);
   }
 }
