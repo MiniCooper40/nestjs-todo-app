@@ -22,17 +22,16 @@ export class AuthService {
     });
   }
 
-  async login(
-    username: string,
-    pass: string,
-  ): Promise<{ access_token: string }> {
+  async login(username: string, pass: string): Promise<any> {
     const user = await this.userService.findByUsername(username);
     if (user?.password !== pass) {
       throw new UnauthorizedException();
     }
+    const { password, ...userResponse } = user;
     const payload = { sub: user.userId, username: user.username };
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      accessToken: await this.jwtService.signAsync(payload),
+      user: userResponse,
     };
   }
 }
