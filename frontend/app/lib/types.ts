@@ -9,10 +9,11 @@ export type AuthResponse = {
 };
 
 export type Todo = {
+  todoId: number;
   title: string;
   description: string;
-  creationTime: Date;
-  dueTime?: Date;
-  completionTime?: Date;
+  createdTime: string;
+  dueTime?: string;
+  completionTime?: string;
   priority: number;
 };
