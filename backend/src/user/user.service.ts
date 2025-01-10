@@ -25,6 +25,9 @@ export class UserService {
       where: {
         userId,
       },
+      relations: {
+        todos: true,
+      },
     });
   }
 
@@ -33,18 +36,14 @@ export class UserService {
       where: {
         username,
       },
-    });
-  }
-
-  async findTodosByUserId(userId: number) {
-    const user = await this.userRepository.findOne({
-      where: {
-        userId,
-      },
       relations: {
         todos: true,
       },
     });
+  }
+
+  async findTodosByUserId(userId: number) {
+    const user = await this.findById(userId);
 
     if (!user) return null;
 
@@ -65,7 +64,6 @@ export class UserService {
 
     return user.todos;
   }
-
 
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
